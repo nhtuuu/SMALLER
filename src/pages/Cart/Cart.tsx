@@ -206,7 +206,7 @@ export default function Cart() {
                               <Link
                                 className='h-20 w-20 flex-shrink-0'
                                 to={`${path.home}${createURL({
-                                  name: purchase.product.name,
+                                  name: getProductById(purchase.product._id)?.name as string,
                                   id: purchase.product._id
                                 })}`}
                               >
@@ -215,7 +215,7 @@ export default function Cart() {
                               <div className='flex-grow px-2 pt-1 pb-2'>
                                 <Link
                                   to={`${path.home}${createURL({
-                                    name: purchase.product.name,
+                                    name: getProductById(purchase.product._id)?.name as string,
                                     id: purchase.product._id
                                   })}`}
                                   className='line-clamp-2 text-left'

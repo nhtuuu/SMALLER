@@ -6,10 +6,12 @@ import { useQuery } from '@tanstack/react-query'
 import path from 'src/constants/path'
 import purchasesApi from 'src/apis/purchases.api'
 import { purchasesStatus } from 'src/constants/purchase'
-import { formatCurrency } from 'src/utils/utils'
+import { createURL, formatCurrency } from 'src/utils/utils'
 import noproduct from 'src/assets/images/no-product.png'
 import NavHeader from '../NavHeader'
 import useSearchProducts from 'src/hooks/useSearchProducts'
+import productInfo from 'src/constants/productInfo'
+import _ from 'lodash'
 
 export default function Header() {
   const MAX_PURCHASES = 5
@@ -23,6 +25,11 @@ export default function Header() {
   })
 
   const purchasesInCart = purchasesInCartData?.data.data
+
+  const getProductById = (id: string) => {
+    const productDetail = _.find(productInfo, { id })
+    return productDetail ? productDetail : null
+  }
 
   return (
     <div className='pb-5 pt-2 bg-[linear-gradient(-180deg,#f53d2d,#f63)] text-white'>
@@ -129,21 +136,28 @@ export default function Header() {
                       <span className='text-gray-300'>Recently Added</span>
                       <div className='mt-5'></div>
                       {purchasesInCart?.slice(0, 5).map((purchase) => (
-                        <div className='mt-2 flex py-2 hover:bg-gray-100' key={purchase._id}>
+                        <Link
+                          to={`${path.home}${createURL({
+                            name: getProductById(purchase.product._id)?.name as string,
+                            id: purchase.product._id
+                          })}`}
+                          className='mt-2 flex py-2 hover:bg-gray-100'
+                          key={purchase._id}
+                        >
                           <div className='flex-shrink-0'>
                             <img
                               src={purchase.product.image}
-                              alt={purchase.product.name}
+                              alt={getProductById(purchase.product._id)?.name}
                               className='h-11 w-11 object-cover'
                             />
                           </div>
                           <div className='ml-2 flex-grow overflow-hidden'>
-                            <div className='truncate'>{purchase.product.name}</div>
+                            <div className='truncate'>{getProductById(purchase.product._id)?.name}</div>
                           </div>
                           <div className='ml-2 flex-shrink-0'>
-                            <span className='text-orange'>₫{formatCurrency(purchase.product.price)}</span>
+                            <span className='text-orange'>${formatCurrency(purchase.product.price)}</span>
                           </div>
-                        </div>
+                        </Link>
                       ))}
                       <div className='flex items-center justify-between mt-6'>
                         <div className='text-xs capitalize text-gray-500'>
@@ -151,7 +165,9 @@ export default function Header() {
                             ? `${purchasesInCart.length - MAX_PURCHASES} More In Your Cart`
                             : ''}
                         </div>
-                        <button className='bg-orange text-white px-3 py-2'>Your Cart</button>
+                        <Link to={path.cart} className='bg-orange text-white px-3 py-2'>
+                          Your Cart
+                        </Link>
                       </div>
                     </div>
                   ) : (
