@@ -232,7 +232,7 @@ export default function Cart() {
                           <div className='col-span-2'>
                             <div className='flex items-center justify-center'>
                               <span className='text-gray-300 line-through'>
-                                ₫{formatCurrency(purchase.product.price_before_discount)}
+                                ${formatCurrency(purchase.product.price_before_discount)}
                               </span>
                               <span className='ml-3'>${formatCurrency(purchase.product.price)}</span>
                             </div>
@@ -259,7 +259,7 @@ export default function Cart() {
                           </div>
                           <div className='col-span-1'>
                             <span className='text-orange'>
-                              ₫{formatCurrency(purchase.product.price * purchase.buy_count)}
+                              ${formatCurrency(purchase.product.price * purchase.buy_count)}
                             </span>
                           </div>
                           <div className='col-span-1'>
